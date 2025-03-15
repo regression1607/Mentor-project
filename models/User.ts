@@ -2,6 +2,7 @@ import mongoose, { Schema, type Document, type Model } from "mongoose"
 import type { UserRole } from "@/types/auth"
 
 export interface IUser extends Document {
+  _id: string | mongoose.Types.ObjectId
   name: string
   email: string
   image?: string
@@ -14,6 +15,7 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
+    _id: { type:mongoose.Schema.ObjectId},
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     image: { type: String },

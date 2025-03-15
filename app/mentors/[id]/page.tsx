@@ -1,9 +1,9 @@
 import Image from "next/image"
-import { Star, Calendar, MessageCircle, Phone, Video } from "lucide-react"
+import { Star, Calendar } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { SessionBooking } from "@/components/booking/session-booking"
 import { getMentorById } from "@/lib/mentors"
 import { notFound } from "next/navigation"
 
@@ -176,31 +176,7 @@ export default async function MentorProfile({ params }: { params: { id: string }
               <CardTitle>Book a Session</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <div className="flex items-center">
-                    <MessageCircle className="h-5 w-5 mr-3 text-primary" />
-                    <span>Chat Session</span>
-                  </div>
-                  <span className="font-semibold">${mentor.pricing.chat}/hr</span>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <div className="flex items-center">
-                    <Video className="h-5 w-5 mr-3 text-primary" />
-                    <span>Video Call</span>
-                  </div>
-                  <span className="font-semibold">${mentor.pricing.video}/hr</span>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <div className="flex items-center">
-                    <Phone className="h-5 w-5 mr-3 text-primary" />
-                    <span>Phone Call</span>
-                  </div>
-                  <span className="font-semibold">${mentor.pricing.call}/hr</span>
-                </div>
-              </div>
+              <SessionBooking mentor={mentor} />
 
               <div>
                 <h3 className="font-medium mb-3 flex items-center">
@@ -214,8 +190,6 @@ export default async function MentorProfile({ params }: { params: { id: string }
                   ))}
                 </ul>
               </div>
-
-              <Button className="w-full">Schedule Session</Button>
             </CardContent>
           </Card>
         </div>

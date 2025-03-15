@@ -180,9 +180,19 @@ export default function MenteeDashboard() {
                       </div>
                     </div>
                   ))}
+                  <div className="flex justify-center mt-4">
+                    <Button asChild>
+                      <a href="/mentors">Book More Sessions</a>
+                    </Button>
+                  </div>
                 </div>
               ) : (
-                <p className="text-center py-4 text-gray-500">No upcoming sessions</p>
+                <div className="text-center py-4">
+                  <p className="text-gray-500 mb-4">No upcoming sessions</p>
+                  <Button asChild>
+                    <a href="/mentors">Find a Mentor</a>
+                  </Button>
+                </div>
               )}
             </CardContent>
           </Card>

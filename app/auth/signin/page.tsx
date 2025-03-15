@@ -175,7 +175,7 @@ export default function SignIn() {
               </p>
             ) : (
               <p>
-                Don't have an account?{" "}
+               Dont have an account?{" "}
                 <button type="button" onClick={() => setIsRegister(true)} className="text-primary hover:underline">
                   Register
                 </button>

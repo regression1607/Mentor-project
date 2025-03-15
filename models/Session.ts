@@ -7,6 +7,8 @@ export interface ISession extends Document {
   date: Date
   startTime: string
   endTime: string
+  duration: number // in minutes
+  timezone: string
   status: "pending" | "confirmed" | "completed" | "cancelled"
   price: number
   rating?: number
@@ -27,6 +29,8 @@ const SessionSchema = new Schema<ISession>(
     date: { type: Date, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
+    duration: { type: Number, required: true, default: 60 }, // default to 60 minutes
+    timezone: { type: String, required: true, default: "UTC" },
     status: {
       type: String,
       enum: ["pending", "confirmed", "completed", "cancelled"],

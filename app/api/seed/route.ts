@@ -11,9 +11,9 @@ export async function GET() {
     // Check if we already have users
     const userCount = await User.countDocuments()
 
-    // if (userCount > 0) {
-    //   return NextResponse.json({ message: "Database already seeded" })
-    // }
+    if (userCount > 0) {
+      return NextResponse.json({ message: "Database already seeded" })
+    }
 
     // Create users
     const hashedPassword = await bcrypt.hash("password123", 10);

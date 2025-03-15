@@ -23,7 +23,7 @@ export async function getMentors({
   await connectDB()
 
   // Build the filter query
-  const query: any = {}
+  const query : any = {} ;
 
   if (specialties && specialties.length > 0) {
     query.specialties = { $in: specialties }
