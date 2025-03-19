@@ -158,17 +158,17 @@ export async function markMessagesAsRead(chatId: string) {
     }
 
     // Check if user is part of this chat
-    if (!chat.mentorId.equals(currentUser._id) && !chat.menteeId.equals(currentUser._id)) {
+    if (chat.mentorId.toString() !== currentUser._id.toString() && chat.menteeId.toString() !== currentUser._id.toString()) {
       return {
-        success: false,
-        error: "You don't have access to this chat",
-      }
-    }
-
+          success: false,
+          error: "You don't have access to this chat",
+      };
+  }
+  
     // Mark messages from the other user as read
     let updated = false
     chat.messages.forEach((message) => {
-      if (!message.sender.equals(currentUser._id) && !message.read) {
+      if (message.sender.toString() !== currentUser._id.toString() && !message.read) {
         message.read = true
         updated = true
       }
