@@ -1,8 +1,8 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
+import { MentorApplicationForm } from "@/components/mentor-application-form"
 import { CheckCircle, DollarSign, Users, Calendar } from "lucide-react"
 
 export default function BecomeMentor() {
@@ -17,11 +17,9 @@ export default function BecomeMentor() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         <Card className="text-center">
-          <CardHeader>
-            <DollarSign className="h-12 w-12 mx-auto text-primary" />
-            <CardTitle>Set Your Own Rates</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
+            <DollarSign className="h-12 w-12 mx-auto text-primary mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Set Your Own Rates</h3>
             <p className="text-gray-600">
               You decide how much your time and expertise are worth. Set different rates for chat, video, and call
               sessions.
@@ -30,11 +28,9 @@ export default function BecomeMentor() {
         </Card>
 
         <Card className="text-center">
-          <CardHeader>
-            <Users className="h-12 w-12 mx-auto text-primary" />
-            <CardTitle>Build Your Network</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
+            <Users className="h-12 w-12 mx-auto text-primary mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Build Your Network</h3>
             <p className="text-gray-600">
               Connect with mentees from around the world and build your professional network while helping others.
             </p>
@@ -42,13 +38,11 @@ export default function BecomeMentor() {
         </Card>
 
         <Card className="text-center">
-          <CardHeader>
-            <Calendar className="h-12 w-12 mx-auto text-primary" />
-            <CardTitle>Flexible Schedule</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
+            <Calendar className="h-12 w-12 mx-auto text-primary mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Flexible Schedule</h3>
             <p className="text-gray-600">
-              Set your own availability and work when it's convenient for you. No minimum time commitment required.
+              Set your own availability and work when its convenient for you. No minimum time commitment required.
             </p>
           </CardContent>
         </Card>
@@ -83,7 +77,7 @@ export default function BecomeMentor() {
               <div>
                 <h3 className="font-semibold text-lg">Set your availability</h3>
                 <p className="text-gray-600">
-                  Use our calendar tool to mark when you're available for sessions. Update this anytime as your schedule
+                  Use our calendar tool to mark when youre available for sessions. Update this anytime as your schedule
                   changes.
                 </p>
               </div>
@@ -102,59 +96,7 @@ export default function BecomeMentor() {
         </div>
 
         <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Mentor Application</CardTitle>
-              <CardDescription>Tell us about yourself and your expertise</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" placeholder="John" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" placeholder="Doe" />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="john.doe@example.com" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="profession">Current Profession</Label>
-                  <Input id="profession" placeholder="Senior Software Engineer" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="expertise">Areas of Expertise</Label>
-                  <Input id="expertise" placeholder="React, Node.js, System Design" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="experience">Years of Experience</Label>
-                  <Input id="experience" type="number" placeholder="5" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="bio">Tell us about yourself and why you want to be a mentor</Label>
-                  <Textarea
-                    id="bio"
-                    placeholder="Share your background, experience, and motivation for mentoring..."
-                    rows={5}
-                  />
-                </div>
-
-                <Button type="submit" className="w-full">
-                  Submit Application
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <MentorApplicationForm />
         </div>
       </div>
 
@@ -163,7 +105,9 @@ export default function BecomeMentor() {
         <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
           Join our community of mentors today and start sharing your knowledge while earning on your own terms.
         </p>
-        <Button size="lg">Apply Now</Button>
+        <Button size="lg" onClick={() => document.querySelector("form")?.scrollIntoView({ behavior: "smooth" })}>
+          Apply Now
+        </Button>
       </div>
     </div>
   )

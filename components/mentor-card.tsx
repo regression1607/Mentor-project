@@ -6,10 +6,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 type Mentor = {
-  id: number
+  id: string
   name: string
   title: string
-  image: string
+  image?: string
   rating: number
   reviewCount: number
   specialties: string[]

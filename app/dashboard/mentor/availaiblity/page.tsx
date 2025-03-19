@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+// import { useRouter } from "next/navigation"
 import { format, parseISO } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -65,7 +66,7 @@ const TIME_SLOTS = [
 ]
 
 export default function MentorAvailability() {
-  const router = useRouter()
+  // const router = useRouter()
   const [availabilitySlots, setAvailabilitySlots] = useState<any[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [startTime, setStartTime] = useState("")
@@ -77,7 +78,7 @@ export default function MentorAvailability() {
   const [activeTab, setActiveTab] = useState("upcoming")
 
   // Fetch availability data
-  const fetchAvailability = async () => {
+  async function fetchAvailability () {
     const data = await getMentorAvailability(activeTab === "all")
     setAvailabilitySlots(data)
   }
@@ -99,7 +100,7 @@ export default function MentorAvailability() {
       toast({
         title: "Error",
         description: "Please select a date",
-        variant: "destructive",
+        
       })
       return
     }
@@ -108,7 +109,7 @@ export default function MentorAvailability() {
       toast({
         title: "Error",
         description: "Please select start and end times",
-        variant: "destructive",
+        
       })
       return
     }
@@ -121,7 +122,7 @@ export default function MentorAvailability() {
       toast({
         title: "Error",
         description: "End time must be after start time",
-        variant: "destructive",
+        
       })
       return
     }
@@ -131,7 +132,7 @@ export default function MentorAvailability() {
       toast({
         title: "Error",
         description: "Please select at least one day for recurring availability",
-        variant: "destructive",
+  
       })
       return
     }
@@ -151,7 +152,7 @@ export default function MentorAvailability() {
         toast({
           title: "Error",
           description: result.error,
-          variant: "destructive",
+    
         })
       } else {
         toast({
@@ -173,7 +174,7 @@ export default function MentorAvailability() {
       toast({
         title: "Error",
         description: "Failed to add availability",
-        variant: "destructive",
+  
       })
       console.log('error',error);
     } finally {
@@ -193,7 +194,7 @@ export default function MentorAvailability() {
           toast({
             title: "Error",
             description: result.error,
-            variant: "destructive",
+      
           })
         } else {
           toast({
@@ -208,7 +209,7 @@ export default function MentorAvailability() {
         toast({
           title: "Error",
           description: "Failed to delete availability slot",
-          variant: "destructive",
+    
         })
       console.log('error',error);
 
@@ -217,7 +218,7 @@ export default function MentorAvailability() {
   }
 
   // Group slots by date for display
-  const groupedSlots = availabilitySlots.reduce(
+  const groupedSlots : any = availabilitySlots.reduce(
     (acc, slot) => {
       const date = format(parseISO(slot.date), "yyyy-MM-dd")
       if (!acc[date]) {
@@ -340,7 +341,8 @@ export default function MentorAvailability() {
           ) : (
             Object.entries(groupedSlots)
               .sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
-              .map(([date, slots]) => (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .map(([date, slots]:any) => (
                 <Card key={date}>
                   <CardHeader>
                     <CardTitle>{format(new Date(date), "EEEE, MMMM d, yyyy")}</CardTitle>
@@ -394,7 +396,7 @@ export default function MentorAvailability() {
           ) : (
             Object.entries(groupedSlots)
               .sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
-              .map(([date, slots]) => (
+              .map(([date, slots]:any) => (
                 <Card key={date}>
                   <CardHeader>
                     <CardTitle>{format(new Date(date), "EEEE, MMMM d, yyyy")}</CardTitle>

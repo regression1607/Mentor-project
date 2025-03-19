@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { User, LogOut, Menu } from "lucide-react"
 import { useState } from "react"
+import Image from "next/image"
 
 export function MainNav() {
   const pathname = usePathname()
@@ -57,11 +58,7 @@ export function MainNav() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     {session.user?.image ? (
-                      <img
-                        src={session.user.image || "/placeholder.svg"}
-                        alt={session.user.name || "User"}
-                        className="h-8 w-8 rounded-full"
-                      />
+                      <Image alt={session.user.name || "User"} src={session.user.image || "/placeholder.svg"} fill className="h-8 w-8 rounded-full"/>
                     ) : (
                       <User className="h-5 w-5" />
                     )}

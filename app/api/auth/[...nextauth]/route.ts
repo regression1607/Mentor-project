@@ -1,4 +1,5 @@
 import NextAuth from "next-auth"
+
 import type { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -8,8 +9,9 @@ import connectDB from "@/lib/db"
 import User from "@/models/User"
 import bcrypt from "bcryptjs"
 
-export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise),
+const authOptions: NextAuthOptions = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  adapter: MongoDBAdapter(clientPromise) as any,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,

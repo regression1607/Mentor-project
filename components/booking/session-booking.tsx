@@ -18,8 +18,9 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "@/hooks/use-toast"
-import { getAvailableSlotsForDate, bookSession } from "@/actions/booking-actions"
+import {  bookSession } from "@/actions/booking-actions"
 import type { MentorProfile } from "@/types/mentor"
+import { getAvailableSlotsForDate } from "@/actions/availaiblity-actions"
 
 type SessionBookingProps = {
   mentor: MentorProfile
@@ -76,7 +77,6 @@ export function SessionBooking({ mentor }: SessionBookingProps) {
       toast({
         title: "Error",
         description: "Failed to fetch available time slots",
-        variant: "destructive",
       })
     } finally {
       setIsLoading(false)
@@ -93,7 +93,6 @@ export function SessionBooking({ mentor }: SessionBookingProps) {
       toast({
         title: "Error",
         description: "Please select a date and time slot",
-        variant: "destructive",
       })
       return
     }
@@ -121,7 +120,7 @@ export function SessionBooking({ mentor }: SessionBookingProps) {
         toast({
           title: "Booking Failed",
           description: result.error,
-          variant: "destructive",
+
         })
       } else {
         toast({
@@ -138,7 +137,6 @@ export function SessionBooking({ mentor }: SessionBookingProps) {
       toast({
         title: "Booking Failed",
         description: "There was an error booking your session",
-        variant: "destructive",
       })
     } finally {
       setIsLoading(false)

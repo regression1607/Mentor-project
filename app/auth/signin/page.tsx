@@ -49,6 +49,7 @@ export default function SignIn() {
         })
 
         router.push("/dashboard/mentee")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setError(error.message)
         setIsLoading(false)

@@ -251,7 +251,7 @@ export default function MentorDashboard() {
               <Calendar className="h-12 w-12 mx-auto mb-4 text-primary" />
               <h3 className="font-medium mb-2">Set Your Schedule</h3>
               <p className="text-gray-500 mb-4">
-                Update your availability to let mentees know when you're free for sessions.
+                Update your availability to let mentees know when youre free for sessions.
               </p>
               <Button>Manage Calendar</Button>
             </div>

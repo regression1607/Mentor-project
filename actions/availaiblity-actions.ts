@@ -1,11 +1,11 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { auth } from "@/auth"
 import connectDB from "@/lib/db"
+import AvailabilitySlot from "@/models/Availability"
 import User from "@/models/User"
 import { parseISO, addDays, getDay } from "date-fns"
-import AvailabilitySlot from "@/models/Availability"
+import { auth } from "@/auth"
 
 export type AvailabilityFormData = {
   date: string
@@ -55,7 +55,7 @@ export async function addAvailabilitySlot(formData: AvailabilityFormData) {
     if (formData.isRecurring && formData.recurringDays?.length) {
       const dayOfWeek = getDay(dateObj)
       const slots = []
-         console.log('day of week', dayOfWeek);
+      console.log('days of week', dayOfWeek);
       // Add the recurring slot for the next 12 weeks
       for (let i = 1; i <= 84; i++) {
         // 84 days = 12 weeks
@@ -87,6 +87,7 @@ export async function addAvailabilitySlot(formData: AvailabilityFormData) {
     return {
       success: true,
     }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Error adding availability slot:", error)
 
@@ -217,6 +218,7 @@ export async function getMentorAvailability(showPast = false) {
       return []
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const query: any = {
       mentorId: user._id,
     }

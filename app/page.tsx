@@ -2,53 +2,13 @@ import Link from "next/link"
 import { MentorCard } from "@/components/mentor-card"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
+import { getMentors } from "@/lib/mentors"
 
-export default function Home() {
+export default async function Home() {
   // Sample mentor data - in a real app, this would come from a database
-  const mentors = [
-    {
-      id: 1,
-      name: "Alex Johnson",
-      title: "Senior Software Engineer",
-      image: "/placeholder.svg?height=400&width=400",
-      rating: 4.9,
-      reviewCount: 127,
-      specialties: ["React", "Node.js", "System Design"],
-      pricing: {
-        chat: 50,
-        video: 100,
-        call: 80,
-      },
-    },
-    {
-      id: 2,
-      name: "Sarah Williams",
-      title: "Product Manager",
-      image: "/placeholder.svg?height=400&width=400",
-      rating: 4.8,
-      reviewCount: 93,
-      specialties: ["Product Strategy", "UX Design", "Agile"],
-      pricing: {
-        chat: 60,
-        video: 120,
-        call: 90,
-      },
-    },
-    {
-      id: 3,
-      name: "Michael Chen",
-      title: "Data Scientist",
-      image: "/placeholder.svg?height=400&width=400",
-      rating: 4.7,
-      reviewCount: 85,
-      specialties: ["Machine Learning", "Python", "Data Analysis"],
-      pricing: {
-        chat: 55,
-        video: 110,
-        call: 85,
-      },
-    },
-  ]
+  const { mentors } = await getMentors({
+    page:1,
+  })
 
   return (
     <div className="min-h-screen bg-gray-50">

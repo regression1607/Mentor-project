@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { getMentors } from "@/lib/mentors"
 
-export async function MentorsList({
-  searchParams,
-}: {
+interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined }
-}) {
+}
+
+export default async function MentorsList({ searchParams }: PageProps) {
   const page = typeof searchParams.page === "string" ? Number.parseInt(searchParams.page) : 1
   const specialties =
     typeof searchParams.specialties === "string"
@@ -137,4 +137,3 @@ export async function MentorsList({
     </div>
   )
 }
-

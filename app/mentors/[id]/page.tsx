@@ -3,12 +3,13 @@ import { Star, Calendar } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SessionBooking } from "@/components/booking/session-booking"
+// import { SessionBooking } from "@/components/booking/session-booking"
 import { getMentorById } from "@/lib/mentors"
 import { notFound } from "next/navigation"
 
-export default async function MentorProfile({ params }: { params: { id: string } }) {
-  const mentor = await getMentorById(params.id)
+export default async function MentorProfile({ params }: { params: Promise<{ id: string }> }) {
+  const {id} = await params;
+  const mentor = await getMentorById(id)
 
   if (!mentor) {
     notFound()
@@ -52,7 +53,8 @@ export default async function MentorProfile({ params }: { params: { id: string }
               <Image
                 src={mentor.image || "/placeholder.svg?height=400&width=400"}
                 alt={mentor.name}
-                fill
+                width={"400"}
+                height={"400"}
                 className="object-cover"
               />
             </div>
@@ -176,7 +178,7 @@ export default async function MentorProfile({ params }: { params: { id: string }
               <CardTitle>Book a Session</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <SessionBooking mentor={mentor} />
+              {/* <SessionBooking mentor={mentor} /> */}
 
               <div>
                 <h3 className="font-medium mb-3 flex items-center">

@@ -23,6 +23,7 @@ export async function getMentors({
   await connectDB()
 
   // Build the filter query
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const query : any = {} ;
 
   if (specialties && specialties.length > 0) {
