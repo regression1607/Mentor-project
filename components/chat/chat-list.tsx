@@ -4,11 +4,11 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { formatDistanceToNow } from "date-fns"
-import { getUserChats } from "@/actions/chat-actions"
+import {  getUserChats } from "@/actions/chat-actions"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { MessageSquare } from "lucide-react"
+import { ChatListShadow } from "./chat-list-shadow"
+import ChatListSkeleton from "./chat-list-skeleton"
 
 type ChatPreview = {
   id: string
@@ -29,12 +29,12 @@ type ChatPreview = {
 export function ChatList({ basePath }: { basePath: string }) {
   const [chats, setChats] = useState<ChatPreview[]>([])
   const [loading, setLoading] = useState(true)
-
+ 
   useEffect(() => {
     async function loadChats() {
       try {
-        const chatData = await getUserChats()
-        setChats(chatData)
+        const chatData = await getUserChats();
+        setChats(chatData);
       } catch (error) {
         console.error("Error loading chats:", error)
       } finally {
@@ -55,15 +55,7 @@ export function ChatList({ basePath }: { basePath: string }) {
 
   if (chats.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center p-6 text-center">
-          <MessageSquare className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-medium mb-2">No conversations yet</h3>
-          <p className="text-muted-foreground">
-            When you start chatting with mentors or mentees, your conversations will appear here.
-          </p>
-        </CardContent>
-      </Card>
+      <ChatListShadow />
     )
   }
 
@@ -125,27 +117,4 @@ export function ChatList({ basePath }: { basePath: string }) {
   )
 }
 
-function ChatListSkeleton() {
-  return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-4 w-48" />
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="flex items-center gap-4 p-3">
-              <Skeleton className="h-12 w-12 rounded-full" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-3 w-48" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
 
