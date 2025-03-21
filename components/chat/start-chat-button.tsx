@@ -22,8 +22,8 @@ export function StartChatButton({ userId, className }: { userId: string; classNa
     setLoading(true)
 
     try {
+      console.log("get or create chat result")
       const result = await getOrCreateChat(userId)
-
       if (result.success) {
         // Determine the correct path based on user role
         const basePath = session.user.role === "mentor" ? "/dashboard/mentor/chats" : "/dashboard/mentee/chats"

@@ -4,13 +4,14 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 // import { SessionBooking } from "@/components/booking/session-booking"
+import { StartChatButton } from "@/components/chat/start-chat-button"
 import { getMentorById } from "@/lib/mentors"
 import { notFound } from "next/navigation"
+// import { WoSessionBooking } from "@/components/booking/wo-state-session-booking"
 
 export default async function MentorProfile({ params }: { params: Promise<{ id: string }> }) {
   const {id} = await params;
-  const mentor = await getMentorById(id)
-
+  const mentor = await getMentorById(id);
   if (!mentor) {
     notFound()
   }
@@ -53,8 +54,7 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
               <Image
                 src={mentor.image || "/placeholder.svg?height=400&width=400"}
                 alt={mentor.name}
-                width={"400"}
-                height={"400"}
+                fill
                 className="object-cover"
               />
             </div>
@@ -76,6 +76,9 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
                     </Badge>
                   ))}
                 </div>
+              </div>
+              <div className="flex gap-3">
+                <StartChatButton userId={mentor.userId} />
               </div>
             </div>
           </div>
@@ -179,7 +182,7 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
             </CardHeader>
             <CardContent className="space-y-6">
               {/* <SessionBooking mentor={mentor} /> */}
-
+                {/* <WoSessionBooking mentor={mentor} />  */}
               <div>
                 <h3 className="font-medium mb-3 flex items-center">
                   <Calendar className="h-5 w-5 mr-2" /> Availability
