@@ -1,19 +1,23 @@
-import Image from "next/image"
-import { Star, Calendar } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image";
+import { Star, Calendar } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { SessionBooking } from "@/components/booking/session-booking"
-import { StartChatButton } from "@/components/chat/start-chat-button"
-import { getMentorById } from "@/lib/mentors"
-import { notFound } from "next/navigation"
+import { StartChatButton } from "@/components/chat/start-chat-button";
+import { getMentorById } from "@/lib/mentors";
+import { notFound } from "next/navigation";
 // import { WoSessionBooking } from "@/components/booking/wo-state-session-booking"
 
-export default async function MentorProfile({ params }: { params: Promise<{ id: string }> }) {
-  const {id} = await params;
+export default async function MentorProfile({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   const mentor = await getMentorById(id);
   if (!mentor) {
-    notFound()
+    notFound();
   }
 
   // Mock reviews data - in a real app, this would come from a database
@@ -42,7 +46,7 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
       comment:
         "They provided excellent career advice and helped me prepare for my interviews. Their feedback on my resume was particularly helpful.",
     },
-  ]
+  ];
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -65,7 +69,9 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
               <div className="flex items-center mb-4">
                 <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
                 <span className="ml-1 font-medium">{mentor.rating}</span>
-                <span className="text-gray-500 ml-1">({mentor.reviewCount} reviews)</span>
+                <span className="text-gray-500 ml-1">
+                  ({mentor.reviewCount} reviews)
+                </span>
               </div>
 
               <div className="mb-4">
@@ -78,7 +84,7 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
                 </div>
               </div>
               <div className="flex gap-3">
-                <StartChatButton userId={mentor.userId} />
+                <StartChatButton otherUserId={mentor.userId} />
               </div>
             </div>
           </div>
@@ -149,7 +155,10 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
                 <CardContent>
                   <ul className="space-y-6">
                     {reviews.map((review) => (
-                      <li key={review.id} className="border-b pb-6 last:border-0 last:pb-0">
+                      <li
+                        key={review.id}
+                        className="border-b pb-6 last:border-0 last:pb-0"
+                      >
                         <div className="flex justify-between mb-2">
                           <p className="font-medium">{review.user}</p>
                           <span className="text-gray-500">{review.date}</span>
@@ -159,7 +168,9 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
                             <Star
                               key={i}
                               className={`h-4 w-4 ${
-                                i < review.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
+                                i < review.rating
+                                  ? "text-yellow-500 fill-yellow-500"
+                                  : "text-gray-300"
                               }`}
                             />
                           ))}
@@ -182,7 +193,7 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
             </CardHeader>
             <CardContent className="space-y-6">
               {/* <SessionBooking mentor={mentor} /> */}
-                {/* <WoSessionBooking mentor={mentor} />  */}
+              {/* <WoSessionBooking mentor={mentor} />  */}
               <div>
                 <h3 className="font-medium mb-3 flex items-center">
                   <Calendar className="h-5 w-5 mr-2" /> Availability
@@ -190,7 +201,8 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
                 <ul className="space-y-3">
                   {mentor.availability.map((avail, index) => (
                     <li key={index} className="text-sm">
-                      <span className="font-medium">{avail.day}:</span> {avail.slots.join(", ")}
+                      <span className="font-medium">{avail.day}:</span>{" "}
+                      {avail.slots.join(", ")}
                     </li>
                   ))}
                 </ul>
@@ -200,6 +212,5 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
         </div>
       </div>
     </div>
-  )
+  );
 }
-
