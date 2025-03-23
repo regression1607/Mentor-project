@@ -172,8 +172,11 @@ export default function MentorDashboard() {
                       </div>
                       <div className="flex items-center space-x-4">
                         {getStatusBadge(session.status)}
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="mr-2">
                           View Details
+                        </Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <a href="/dashboard/mentor/availability">Manage Availability</a>
                         </Button>
                       </div>
                     </div>
