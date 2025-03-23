@@ -50,14 +50,14 @@ export default async function MentorsList({ searchParams }: PageProps) {
         <p className="text-gray-600">Showing {mentors.length} mentors</p>
         <div className="flex gap-2">
           {page > 1 && (
-            <Link href={`/mentors?page=${page - 1}`}>
+            <Link href={`/api/mentors?page=${page - 1}`}>
               <Button variant="outline" size="sm">
                 Previous
               </Button>
             </Link>
           )}
           {page < totalPages && (
-            <Link href={`/mentors?page=${page + 1}`}>
+            <Link href={`/api/mentors?page=${page + 1}`}>
               <Button variant="outline" size="sm">
                 Next
               </Button>
@@ -117,7 +117,7 @@ export default async function MentorsList({ searchParams }: PageProps) {
                 </div>
               </div>
 
-              <Link href={`/mentors/${mentor.id}`}>
+              <Link href={`/api/mentors/${mentor.id}`}>
                 <Button className="w-full">View Profile</Button>
               </Link>
             </div>
@@ -127,7 +127,7 @@ export default async function MentorsList({ searchParams }: PageProps) {
 
       <div className="flex justify-center gap-2 mt-8">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <Link key={pageNum} href={`/mentors?page=${pageNum}`}>
+          <Link key={pageNum} href={`/api/mentors?page=${pageNum}`}>
             <Button variant={pageNum === page ? "default" : "outline"} size="sm" className="w-10 h-10">
               {pageNum}
             </Button>
