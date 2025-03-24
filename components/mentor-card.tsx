@@ -64,7 +64,7 @@ export function MentorCard({ mentor }: { mentor: Mentor }) {
         </div>
       </CardContent>
       <CardFooter className="p-6 pt-0">
-        <Link href={`/mentors/${mentor.id}`} className="w-full">
+        <Link href={`/api/mentors/${mentor.id}`} className="w-full">
           <Button className="w-full">View Profile</Button>
         </Link>
       </CardFooter>

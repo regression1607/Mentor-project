@@ -182,7 +182,7 @@ export default function MenteeDashboard() {
                   ))}
                   <div className="flex justify-center mt-4">
                     <Button asChild>
-                      <Link href='/mentors'>Book More Sessions</Link>
+                      <Link href='/api/mentors'>Book More Sessions</Link>
                     </Button>
                   </div>
                 </div>
@@ -190,9 +190,7 @@ export default function MenteeDashboard() {
                 <div className="text-center py-4">
                   <p className="text-gray-500 mb-4">No upcoming sessions</p>
                   <Button asChild>
-                    {/* <a href="/mentors">Find a Mentor
-                    <Link href='/mentors'></Link> */}
-                    <Link href={"/mentors"}> Find a Mentor</Link>
+                    <Link href={"/api/mentors"}> Find a Mentor</Link>
                   </Button>
                 </div>
               )}
@@ -285,7 +283,7 @@ export default function MenteeDashboard() {
                     </div>
                   </div>
 
-                  <Link href={`/mentors/${mentor.id}`}>
+                  <Link href={`/api/mentors/${mentor.id}`}>
                     <Button className="w-full">View Profile</Button>
                   </Link>
                 </div>

@@ -40,7 +40,7 @@ export default async function Home() {
       <section className="py-16 container mx-auto px-4">
         <div className="flex justify-between items-center mb-10">
           <h2 className="text-3xl font-bold text-gray-800">Featured Mentors</h2>
-          <Link href="/mentors">
+          <Link href="/api/mentors">
             <Button variant="outline">View All Mentors</Button>
           </Link>
         </div>
