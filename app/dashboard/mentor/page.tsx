@@ -1,22 +1,33 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, DollarSign, MessageCircle, Phone, Video, Users, Clock } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import {
+  Calendar,
+  DollarSign,
+  MessageCircle,
+  Phone,
+  Video,
+  Users,
+  Clock,
+} from "lucide-react";
 
-export default function MentorDashboard() {
+import Mentor from "@/models/Mentor";
+import { getMentorById } from "@/lib/mentors";
+
+export default async function MentorDashboard() {
   // Mock data - in a real app, this would come from a database
   const earnings = {
     total: 2450,
     thisMonth: 850,
     pending: 200,
-  }
+  };
 
   const sessions = {
     completed: 27,
     upcoming: 3,
     cancelled: 2,
-  }
+  };
 
   const upcomingSessions = [
     {
@@ -43,7 +54,7 @@ export default function MentorDashboard() {
       time: "4:00 PM - 5:00 PM",
       status: "pending",
     },
-  ]
+  ];
 
   const recentSessions = [
     {
@@ -73,35 +84,52 @@ export default function MentorDashboard() {
       status: "completed",
       rating: 5,
     },
-  ]
+  ];
 
   const getSessionIcon = (type: string) => {
     switch (type) {
       case "video":
-        return <Video className="h-4 w-4" />
+        return <Video className="h-4 w-4" />;
       case "chat":
-        return <MessageCircle className="h-4 w-4" />
+        return <MessageCircle className="h-4 w-4" />;
       case "call":
-        return <Phone className="h-4 w-4" />
+        return <Phone className="h-4 w-4" />;
       default:
-        return <MessageCircle className="h-4 w-4" />
+        return <MessageCircle className="h-4 w-4" />;
     }
-  }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "confirmed":
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Confirmed</Badge>
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+            Confirmed
+          </Badge>
+        );
       case "pending":
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Pending</Badge>
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
+            Pending
+          </Badge>
+        );
       case "completed":
-        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Completed</Badge>
+        return (
+          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+            Completed
+          </Badge>
+        );
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Cancelled</Badge>
+        return (
+          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+            Cancelled
+          </Badge>
+        );
       default:
-        return <Badge>{status}</Badge>
+        return <Badge>{status}</Badge>;
     }
-  }
+  };
+  const mentor = await getMentorById("67d4709d9d1e7c742b328ade");
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -110,12 +138,16 @@ export default function MentorDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Earnings
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${earnings.total}</div>
-            <p className="text-xs text-muted-foreground">${earnings.thisMonth} this month</p>
+            <p className="text-xs text-muted-foreground">
+              ${earnings.thisMonth} this month
+            </p>
           </CardContent>
         </Card>
 
@@ -126,18 +158,24 @@ export default function MentorDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{sessions.completed}</div>
-            <p className="text-xs text-muted-foreground">{sessions.upcoming} upcoming</p>
+            <p className="text-xs text-muted-foreground">
+              {sessions.upcoming} upcoming
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Pending Payments</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Pending Payments
+            </CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${earnings.pending}</div>
-            <p className="text-xs text-muted-foreground">From {sessions.upcoming} upcoming sessions</p>
+            <p className="text-xs text-muted-foreground">
+              From {sessions.upcoming} upcoming sessions
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -157,9 +195,14 @@ export default function MentorDashboard() {
               {upcomingSessions.length > 0 ? (
                 <div className="space-y-4">
                   {upcomingSessions.map((session) => (
-                    <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={session.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex items-center space-x-4">
-                        <div className="bg-primary/10 p-2 rounded-full">{getSessionIcon(session.type)}</div>
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          {getSessionIcon(session.type)}
+                        </div>
                         <div>
                           <h3 className="font-medium">{session.mentee}</h3>
                           <div className="flex items-center text-sm text-gray-500">
@@ -183,7 +226,9 @@ export default function MentorDashboard() {
                   ))}
                 </div>
               ) : (
-                <p className="text-center py-4 text-gray-500">No upcoming sessions</p>
+                <p className="text-center py-4 text-gray-500">
+                  No upcoming sessions
+                </p>
               )}
             </CardContent>
           </Card>
@@ -198,9 +243,14 @@ export default function MentorDashboard() {
               {recentSessions.length > 0 ? (
                 <div className="space-y-4">
                   {recentSessions.map((session) => (
-                    <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={session.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex items-center space-x-4">
-                        <div className="bg-primary/10 p-2 rounded-full">{getSessionIcon(session.type)}</div>
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          {getSessionIcon(session.type)}
+                        </div>
                         <div>
                           <h3 className="font-medium">{session.mentee}</h3>
                           <div className="flex items-center text-sm text-gray-500">
@@ -217,7 +267,9 @@ export default function MentorDashboard() {
                             <svg
                               key={i}
                               className={`h-4 w-4 ${
-                                i < session.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
+                                i < session.rating
+                                  ? "text-yellow-500 fill-yellow-500"
+                                  : "text-gray-300"
                               }`}
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 24 24"
@@ -234,7 +286,9 @@ export default function MentorDashboard() {
                   ))}
                 </div>
               ) : (
-                <p className="text-center py-4 text-gray-500">No recent sessions</p>
+                <p className="text-center py-4 text-gray-500">
+                  No recent sessions
+                </p>
               )}
             </CardContent>
           </Card>
@@ -251,7 +305,8 @@ export default function MentorDashboard() {
               <Calendar className="h-12 w-12 mx-auto mb-4 text-primary" />
               <h3 className="font-medium mb-2">Set Your Schedule</h3>
               <p className="text-gray-500 mb-4">
-                Update your availability to let mentees know when youre free for sessions.
+                Update your availability to let mentees know when youre free for
+                sessions.
               </p>
               <Button>Manage Calendar</Button>
             </div>
@@ -305,8 +360,8 @@ export default function MentorDashboard() {
             </div>
           </CardContent>
         </Card>
+        {/* <BookVideoCallDialog mentor={mentor} /> */}
       </div>
     </div>
-  )
+  );
 }
-
