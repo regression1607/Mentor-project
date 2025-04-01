@@ -1,147 +1,198 @@
-"use client";
+"use client"
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useTransition, useState } from "react";
-import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { MessageCircle, Phone, Video } from "lucide-react";
-import { DatePicker } from "@/components/calendar/date-picker";
-// import { TimeSlotPicker } from "@/components/calendar/time-slot-picker";
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { Button } from "@/components/ui/button"
+import { MessageCircle, Phone, Video } from "lucide-react"
+import { DatePicker } from "@/components/calendar/date-picker"
+import { type TimeSlot, TimeSlotPicker } from "@/components/calendar/time-slot-picker"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "@/hooks/use-toast";
-import { bookSession } from "@/actions/booking-actions";
-import type { MentorProfile } from "@/types/mentor";
-// import { getAvailableSlotsForDate } from "@/actions/availability-actions";
+} from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "@/hooks/use-toast"
+import {  bookSession } from "@/actions/booking-actions"
+import type { MentorProfile } from "@/types/mentor"
+import { getAvailableSlotsForDate } from "@/actions/availaiblity-actions"
 
 type SessionBookingProps = {
-  mentor: MentorProfile;
-};
+  mentor: MentorProfile
+}
 
-export default function SessionBooking({ mentor }: SessionBookingProps) {
-  console.log("mentor oin session bioking", mentor);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { data: session, status } = useSession();
-  const [isPending, startTransition] = useTransition();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+export function SessionBooking({ mentor }: SessionBookingProps) {
+  const router = useRouter()
+  const { data: session, status } = useSession()
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([])
+  const [selectedSlot, setSelectedSlot] = useState<TimeSlot | undefined>(undefined)
+  const [selectedType, setSelectedType] = useState<"chat" | "video" | "call">("video")
+  const [isLoading, setIsLoading] = useState(false)
+  const [timezone, setTimezone] = useState("")
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  // Extract params from URL
-  const selectedDate = searchParams.get("date")
-    ? new Date(searchParams.get("date")!)
-    : undefined;
-  const selectedSlot = searchParams.get("slot");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const selectedType = searchParams.get("type") || ("video" as any);
-  const timezone =
-    searchParams.get("timezone") ||
-    Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // Get user's timezone
+  useEffect(() => {
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+  }, [])
 
-  // Fetch available slots via Server Actions
-  // const fetchAvailableSlots = async () => {
-  //   if (!selectedDate) return [];
-  //   return await getAvailableSlotsForDate(
-  //     mentor.userId,
-  //     selectedDate.toISOString()
-  //   );
-  // };
-  console.log("status", status);
-
-  // Update URL params
-  const updateQueryParams = (key: string, value: string | undefined) => {
-    const params = new URLSearchParams(searchParams);
-    if (value) {
-      params.set(key, value);
+  // Fetch available slots when date changes
+  useEffect(() => {
+    if (selectedDate) {
+      fetchAvailableSlots()
     } else {
-      params.delete(key);
+      setAvailableSlots([])
+      setSelectedSlot(undefined)
     }
-    router.replace(`?${params.toString()}`);
-  };
+  }, [selectedDate])
+
+  const fetchAvailableSlots = async () => {
+    if (!selectedDate) return
+
+    setIsLoading(true)
+    try {
+      const slots = await getAvailableSlotsForDate(mentor.userId, selectedDate.toISOString())
+      setAvailableSlots(
+        slots.map((slot) => ({
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+        })),
+      )
+
+      // Clear selected slot if it's no longer available
+      if (
+        selectedSlot &&
+        !slots.some((s) => s.startTime === selectedSlot.startTime && s.endTime === selectedSlot.endTime)
+      ) {
+        setSelectedSlot(undefined)
+      }
+    } catch (error) {
+      console.error("Error fetching slots:", error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch available time slots",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleBookSession = async () => {
     if (!session) {
-      router.push("/auth/signin");
-      return;
+      router.push("/auth/signin")
+      return
     }
 
     if (!selectedDate || !selectedSlot) {
       toast({
         title: "Error",
         description: "Please select a date and time slot",
-      });
-      return;
+      })
+      return
     }
 
-    startTransition(async () => {
-      try {
-        const result = await bookSession({
-          mentorId: mentor.userId,
-          slotId: selectedSlot,
-          type: selectedType,
-          timezone,
-        });
+    setIsLoading(true)
 
-        if (result.error) {
-          toast({ title: "Booking Failed", description: result.error });
-        } else {
-          toast({
-            title: "Booking Successful",
-            description: "Your session has been booked",
-          });
-          router.push("/dashboard/mentee");
-          setIsDialogOpen(false);
-        }
-      } catch (error) {
-        console.log("error", error);
+    try {
+      // Find the slot ID that matches the selected time
+      const slotId = availableSlots.find(
+        (slot) => slot.startTime === selectedSlot.startTime && slot.endTime === selectedSlot.endTime,
+      )?.id
+
+      if (!slotId) {
+        throw new Error("Selected slot not found")
+      }
+
+      const result = await bookSession({
+        mentorId: mentor.userId,
+        slotId,
+        type: selectedType,
+        timezone,
+      })
+
+      if (result.error) {
         toast({
           title: "Booking Failed",
-          description: "There was an error booking your session",
-        });
+          description: result.error,
+
+        })
+      } else {
+        toast({
+          title: "Booking Successful",
+          description: "Your session has been booked",
+        })
+
+        // Redirect to mentee dashboard
+        router.push("/dashboard/mentee")
+        setIsDialogOpen(false)
       }
-    });
-  };
+    } catch (error) {
+      console.error("Error booking session:", error)
+      toast({
+        title: "Booking Failed",
+        description: "There was an error booking your session",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const getSessionIcon = (type: string) => {
+    switch (type) {
+      case "video":
+        return <Video className="h-5 w-5 mr-3 text-primary" />
+      case "chat":
+        return <MessageCircle className="h-5 w-5 mr-3 text-primary" />
+      case "call":
+        return <Phone className="h-5 w-5 mr-3 text-primary" />
+      default:
+        return <Video className="h-5 w-5 mr-3 text-primary" />
+    }
+  }
 
   return (
     <div className="space-y-4">
-      {/* Session Type Selection */}
-      {["chat", "video", "call"].map((type) => (
+      <div className="space-y-4">
         <div
-          key={type}
-          className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${
-            selectedType === type ? "ring-2 ring-primary" : ""
-          }`}
-          onClick={() => updateQueryParams("type", type)}
+          className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${selectedType === "chat" ? "ring-2 ring-primary" : ""}`}
+          onClick={() => setSelectedType("chat")}
         >
           <div className="flex items-center">
-            {type === "chat" ? (
-              <MessageCircle className="h-5 w-5 mr-3 text-primary" />
-            ) : null}
-            {type === "video" ? (
-              <Video className="h-5 w-5 mr-3 text-primary" />
-            ) : null}
-            {type === "call" ? (
-              <Phone className="h-5 w-5 mr-3 text-primary" />
-            ) : null}
-            <span className="capitalize">{type} Session</span>
+            <MessageCircle className="h-5 w-5 mr-3 text-primary" />
+            <span>Chat Session</span>
           </div>
-          <span className="font-semibold">${mentor.pricing[type]}/hr</span>
+          <span className="font-semibold">${mentor.pricing.chat}/hr</span>
         </div>
-      ))}
 
-      {/* Booking Dialog */}
+        <div
+          className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${selectedType === "video" ? "ring-2 ring-primary" : ""}`}
+          onClick={() => setSelectedType("video")}
+        >
+          <div className="flex items-center">
+            <Video className="h-5 w-5 mr-3 text-primary" />
+            <span>Video Call</span>
+          </div>
+          <span className="font-semibold">${mentor.pricing.video}/hr</span>
+        </div>
+
+        <div
+          className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${selectedType === "call" ? "ring-2 ring-primary" : ""}`}
+          onClick={() => setSelectedType("call")}
+        >
+          <div className="flex items-center">
+            <Phone className="h-5 w-5 mr-3 text-primary" />
+            <span>Phone Call</span>
+          </div>
+          <span className="font-semibold">${mentor.pricing.call}/hr</span>
+        </div>
+      </div>
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button className="w-full">Schedule Session</Button>
@@ -149,50 +200,43 @@ export default function SessionBooking({ mentor }: SessionBookingProps) {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Book a Session with {mentor.name}</DialogTitle>
+            <DialogDescription>Select a date and time slot for your {selectedType} session.</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            {/* Selected Type */}
             <div className="flex items-center gap-2">
+              {getSessionIcon(selectedType)}
               <span className="font-medium">
-                {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}{" "}
-                Session
+                {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Session
               </span>
-              <span className="font-semibold ml-auto">
-                ${mentor.pricing[selectedType]}/hr
-              </span>
+              <span className="font-semibold ml-auto">${mentor.pricing[selectedType]}/hr</span>
             </div>
 
-            {/* Date Selection */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Select Date</label>
-              <DatePicker
-                date={selectedDate}
-                onSelect={(date) =>
-                  updateQueryParams("date", date?.toISOString())
-                }
-              />
+              <DatePicker date={selectedDate} onSelect={setSelectedDate} />
             </div>
 
-            {/* Time Slot Selection */}
             {selectedDate && (
               <div className="space-y-2">
                 <label className="text-sm font-medium">Select Time Slot</label>
-                {/* <TimeSlotPicker
-                  selectedSlot={selectedSlot}
-                  availableSlots={fetchAvailableSlots}
-                  onSelectSlot={(slot) => updateQueryParams("slot", slot)}
-                /> */}
+                {isLoading ? (
+                  <p className="text-sm text-muted-foreground">Loading available slots...</p>
+                ) : availableSlots.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No available slots for this date</p>
+                ) : (
+                  <TimeSlotPicker
+                    selectedSlot={selectedSlot}
+                    availableSlots={availableSlots}
+                    onSelectSlot={setSelectedSlot}
+                  />
+                )}
               </div>
             )}
 
-            {/* Timezone Selection */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Timezone</label>
-              <Select
-                value={timezone}
-                onValueChange={(tz) => updateQueryParams("timezone", tz)}
-              >
+              <Select value={timezone} onValueChange={setTimezone}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select timezone" />
                 </SelectTrigger>
@@ -210,13 +254,14 @@ export default function SessionBooking({ mentor }: SessionBookingProps) {
           <DialogFooter>
             <Button
               onClick={handleBookSession}
-              disabled={!selectedDate || !selectedSlot || isPending}
+              disabled={!selectedDate || !selectedSlot || isLoading || status !== "authenticated"}
             >
-              {isPending ? "Booking..." : "Confirm Booking"}
+              {isLoading ? "Booking..." : "Confirm Booking"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
+

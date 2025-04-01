@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, MessageCircle, Phone, Video } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { SearchBar } from "@/components/search/search-bar";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Calendar, MessageCircle, Phone, Video, Search } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import Link from "next/link"
+import Image from "next/image"
 
 export default function MenteeDashboard() {
   // Mock data - in a real app, this would come from a database
@@ -36,7 +36,7 @@ export default function MenteeDashboard() {
       time: "2:00 PM - 3:00 PM",
       status: "pending",
     },
-  ];
+  ]
 
   const pastSessions = [
     {
@@ -67,7 +67,7 @@ export default function MenteeDashboard() {
       status: "completed",
       rated: false,
     },
-  ];
+  ]
 
   const recommendedMentors = [
     {
@@ -94,61 +94,45 @@ export default function MenteeDashboard() {
       rating: 4.7,
       specialties: ["React", "CSS", "Accessibility"],
     },
-  ];
+  ]
 
   const getSessionIcon = (type: string) => {
     switch (type) {
       case "video":
-        return <Video className="h-4 w-4" />;
+        return <Video className="h-4 w-4" />
       case "chat":
-        return <MessageCircle className="h-4 w-4" />;
+        return <MessageCircle className="h-4 w-4" />
       case "call":
-        return <Phone className="h-4 w-4" />;
+        return <Phone className="h-4 w-4" />
       default:
-        return <MessageCircle className="h-4 w-4" />;
+        return <MessageCircle className="h-4 w-4" />
     }
-  };
+  }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "confirmed":
-        return (
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-            Confirmed
-          </Badge>
-        );
+        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Confirmed</Badge>
       case "pending":
-        return (
-          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
-            Pending
-          </Badge>
-        );
+        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Pending</Badge>
       case "completed":
-        return (
-          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-            Completed
-          </Badge>
-        );
+        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Completed</Badge>
       case "cancelled":
-        return (
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
-            Cancelled
-          </Badge>
-        );
+        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Cancelled</Badge>
       default:
-        return <Badge>{status}</Badge>;
+        return <Badge>{status}</Badge>
     }
-  };
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Mentee Dashboard</h1>
 
       <div className="mb-8">
-        <SearchBar
-          className="max-w-xl"
-          placeholder="Search for mentors by skill, industry, or name..."
-        />
+        <div className="relative max-w-xl mb-8">
+          <Input type="text" placeholder="Search for mentors by skill, industry, or name..." className="pr-10" />
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        </div>
       </div>
 
       <Tabs defaultValue="upcoming" className="mb-8">
@@ -166,10 +150,7 @@ export default function MenteeDashboard() {
               {upcomingSessions.length > 0 ? (
                 <div className="space-y-4">
                   {upcomingSessions.map((session) => (
-                    <div
-                      key={session.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
+                    <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center space-x-4">
                         <div className="relative h-12 w-12 rounded-full overflow-hidden">
                           <Image
@@ -181,9 +162,7 @@ export default function MenteeDashboard() {
                         </div>
                         <div>
                           <h3 className="font-medium">{session.mentor.name}</h3>
-                          <p className="text-sm text-gray-500">
-                            {session.mentor.title}
-                          </p>
+                          <p className="text-sm text-gray-500">{session.mentor.title}</p>
                           <div className="flex items-center text-sm text-gray-500 mt-1">
                             <Calendar className="h-3 w-3 mr-1" />
                             <span>
@@ -193,9 +172,7 @@ export default function MenteeDashboard() {
                         </div>
                       </div>
                       <div className="flex items-center space-x-4">
-                        <div className="bg-primary/10 p-2 rounded-full">
-                          {getSessionIcon(session.type)}
-                        </div>
+                        <div className="bg-primary/10 p-2 rounded-full">{getSessionIcon(session.type)}</div>
                         {getStatusBadge(session.status)}
                         <Button variant="outline" size="sm">
                           View Details
@@ -205,7 +182,7 @@ export default function MenteeDashboard() {
                   ))}
                   <div className="flex justify-center mt-4">
                     <Button asChild>
-                      <Link href="/mentors">Book More Sessions</Link>
+                      <Link href='/api/mentors'>Book More Sessions</Link>
                     </Button>
                   </div>
                 </div>
@@ -213,7 +190,7 @@ export default function MenteeDashboard() {
                 <div className="text-center py-4">
                   <p className="text-gray-500 mb-4">No upcoming sessions</p>
                   <Button asChild>
-                    <Link href={"/mentors"}> Find a Mentor</Link>
+                    <Link href={"/api/mentors"}> Find a Mentor</Link>
                   </Button>
                 </div>
               )}
@@ -230,10 +207,7 @@ export default function MenteeDashboard() {
               {pastSessions.length > 0 ? (
                 <div className="space-y-4">
                   {pastSessions.map((session) => (
-                    <div
-                      key={session.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
+                    <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center space-x-4">
                         <div className="relative h-12 w-12 rounded-full overflow-hidden">
                           <Image
@@ -245,9 +219,7 @@ export default function MenteeDashboard() {
                         </div>
                         <div>
                           <h3 className="font-medium">{session.mentor.name}</h3>
-                          <p className="text-sm text-gray-500">
-                            {session.mentor.title}
-                          </p>
+                          <p className="text-sm text-gray-500">{session.mentor.title}</p>
                           <div className="flex items-center text-sm text-gray-500 mt-1">
                             <Calendar className="h-3 w-3 mr-1" />
                             <span>
@@ -257,12 +229,8 @@ export default function MenteeDashboard() {
                         </div>
                       </div>
                       <div className="flex items-center space-x-4">
-                        <div className="bg-primary/10 p-2 rounded-full">
-                          {getSessionIcon(session.type)}
-                        </div>
-                        {!session.rated && (
-                          <Button size="sm">Leave Review</Button>
-                        )}
+                        <div className="bg-primary/10 p-2 rounded-full">{getSessionIcon(session.type)}</div>
+                        {!session.rated && <Button size="sm">Leave Review</Button>}
                         <Button variant="outline" size="sm">
                           View Notes
                         </Button>
@@ -271,9 +239,7 @@ export default function MenteeDashboard() {
                   ))}
                 </div>
               ) : (
-                <p className="text-center py-4 text-gray-500">
-                  No past sessions
-                </p>
+                <p className="text-center py-4 text-gray-500">No past sessions</p>
               )}
             </CardContent>
           </Card>
@@ -289,12 +255,7 @@ export default function MenteeDashboard() {
                 <div className="p-6">
                   <div className="flex items-center space-x-4 mb-4">
                     <div className="relative h-16 w-16 rounded-full overflow-hidden">
-                      <Image
-                        src={mentor.image || "/placeholder.svg"}
-                        alt={mentor.name}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={mentor.image || "/placeholder.svg"} alt={mentor.name} fill className="object-cover" />
                     </div>
                     <div>
                       <h3 className="font-medium">{mentor.name}</h3>
@@ -322,7 +283,7 @@ export default function MenteeDashboard() {
                     </div>
                   </div>
 
-                  <Link href={`/mentors/${mentor.id}`}>
+                  <Link href={`/api/mentors/${mentor.id}`}>
                     <Button className="w-full">View Profile</Button>
                   </Link>
                 </div>
@@ -332,5 +293,6 @@ export default function MenteeDashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }
+

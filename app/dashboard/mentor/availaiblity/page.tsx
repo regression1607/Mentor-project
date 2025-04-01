@@ -1,21 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 // import { useRouter } from "next/navigation"
-import { format, parseISO } from "date-fns";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DatePicker } from "@/components/calendar/date-picker";
+import { format, parseISO } from "date-fns"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DatePicker } from "@/components/calendar/date-picker"
 import {
   Dialog,
   DialogContent,
@@ -24,23 +18,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Calendar, Trash2 } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import {
-  addAvailabilitySlot,
-  deleteAvailabilitySlot,
-  getMentorAvailability,
-} from "@/actions/availability-actions";
+} from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Calendar, Trash2 } from "lucide-react"
+import { toast } from "@/hooks/use-toast"
+import { addAvailabilitySlot, deleteAvailabilitySlot, getMentorAvailability } from "@/actions/availaiblity-actions"
 
 // Days of the week for recurring options
 const DAYS_OF_WEEK = [
@@ -51,7 +35,7 @@ const DAYS_OF_WEEK = [
   { value: 4, label: "Thursday" },
   { value: 5, label: "Friday" },
   { value: 6, label: "Saturday" },
-];
+]
 
 // Time slots options (30 min increments)
 const TIME_SLOTS = [
@@ -79,82 +63,81 @@ const TIME_SLOTS = [
   "6:30 PM",
   "7:00 PM",
   "7:30 PM",
-];
+]
 
 export default function MentorAvailability() {
   // const router = useRouter()
-  const [availabilitySlots, setAvailabilitySlots] = useState<any[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [recurringDays, setRecurringDays] = useState<number[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("upcoming");
+  const [availabilitySlots, setAvailabilitySlots] = useState<any[]>([])
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
+  const [startTime, setStartTime] = useState("")
+  const [endTime, setEndTime] = useState("")
+  const [isRecurring, setIsRecurring] = useState(false)
+  const [recurringDays, setRecurringDays] = useState<number[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState("upcoming")
 
   // Fetch availability data
-  async function fetchAvailability() {
-    const data = await getMentorAvailability(activeTab === "all");
-    setAvailabilitySlots(data);
+  async function fetchAvailability () {
+    const data = await getMentorAvailability(activeTab === "all")
+    setAvailabilitySlots(data)
   }
 
   useEffect(() => {
-    fetchAvailability();
-  }, [activeTab]);
+    fetchAvailability()
+  }, [activeTab])
 
   // Handle recurring day toggle
   const toggleRecurringDay = (day: number) => {
-    setRecurringDays((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-    );
-  };
+    setRecurringDays((prev) => (prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]))
+  }
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!selectedDate) {
       toast({
         title: "Error",
         description: "Please select a date",
-      });
-      return;
+        
+      })
+      return
     }
 
     if (!startTime || !endTime) {
       toast({
         title: "Error",
         description: "Please select start and end times",
-      });
-      return;
+        
+      })
+      return
     }
 
     // Check if start time is before end time
-    const startIndex = TIME_SLOTS.indexOf(startTime);
-    const endIndex = TIME_SLOTS.indexOf(endTime);
+    const startIndex = TIME_SLOTS.indexOf(startTime)
+    const endIndex = TIME_SLOTS.indexOf(endTime)
 
     if (startIndex >= endIndex) {
       toast({
         title: "Error",
         description: "End time must be after start time",
-      });
-      return;
+        
+      })
+      return
     }
 
     // Check if recurring has days selected
     if (isRecurring && recurringDays.length === 0) {
       toast({
         title: "Error",
-        description:
-          "Please select at least one day for recurring availability",
-      });
-      return;
+        description: "Please select at least one day for recurring availability",
+  
+      })
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       const result = await addAvailabilitySlot({
@@ -163,83 +146,89 @@ export default function MentorAvailability() {
         endTime,
         isRecurring,
         recurringDays: isRecurring ? recurringDays : undefined,
-      });
+      })
 
       if (result.error) {
         toast({
           title: "Error",
           description: result.error,
-        });
+    
+        })
       } else {
         toast({
           title: "Success",
           description: "Availability added successfully",
-        });
+        })
 
         // Reset form and close dialog
-        setStartTime("");
-        setEndTime("");
-        setIsRecurring(false);
-        setRecurringDays([]);
-        setIsDialogOpen(false);
+        setStartTime("")
+        setEndTime("")
+        setIsRecurring(false)
+        setRecurringDays([])
+        setIsDialogOpen(false)
 
         // Refresh data
-        fetchAvailability();
+        fetchAvailability()
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to add availability",
-      });
-      console.log("error", error);
+  
+      })
+      console.log('error',error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   // Handle slot deletion
   const handleDeleteSlot = async (slotId: string, isRecurring: boolean) => {
     if (confirm("Are you sure you want to delete this availability slot?")) {
       try {
-        const deleteAll =
-          isRecurring &&
-          confirm("Do you want to delete all future recurring instances?");
+        const deleteAll = isRecurring && confirm("Do you want to delete all future recurring instances?")
 
-        const result = await deleteAvailabilitySlot(slotId, deleteAll);
+        const result = await deleteAvailabilitySlot(slotId, deleteAll)
 
         if (result.error) {
           toast({
             title: "Error",
             description: result.error,
-          });
+      
+          })
         } else {
           toast({
             title: "Success",
             description: "Availability slot deleted",
-          });
+          })
 
           // Refresh data
-          fetchAvailability();
+          fetchAvailability()
         }
       } catch (error) {
         toast({
           title: "Error",
           description: "Failed to delete availability slot",
-        });
-        console.log("error", error);
+    
+        })
+      console.log('error',error);
+
       }
     }
-  };
+  }
 
   // Group slots by date for display
-  const groupedSlots: any = availabilitySlots.reduce((acc, slot) => {
-    const date = format(parseISO(slot.date), "yyyy-MM-dd");
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(slot);
-    return acc;
-  }, {} as Record<string, typeof availabilitySlots>);
+  const groupedSlots : any = availabilitySlots.reduce(
+    (acc, slot) => {
+      const date = format(parseISO(slot.date), "yyyy-MM-dd")
+      if (!acc[date]) {
+        acc[date] = []
+      }
+      acc[date].push(slot)
+      return acc
+    },
+    {} as Record<string, typeof availabilitySlots>,
+  )
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -256,9 +245,7 @@ export default function MentorAvailability() {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Add Availability</DialogTitle>
-              <DialogDescription>
-                Set when youre available for mentoring sessions.
-              </DialogDescription>
+              <DialogDescription>Set when youre available for mentoring sessions.</DialogDescription>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
@@ -305,9 +292,7 @@ export default function MentorAvailability() {
                 <Checkbox
                   id="isRecurring"
                   checked={isRecurring}
-                  onCheckedChange={(checked) =>
-                    setIsRecurring(checked === true)
-                  }
+                  onCheckedChange={(checked) => setIsRecurring(checked === true)}
                 />
                 <Label htmlFor="isRecurring">Recurring availability</Label>
               </div>
@@ -317,10 +302,7 @@ export default function MentorAvailability() {
                   <Label>Repeat on</Label>
                   <div className="grid grid-cols-2 gap-2">
                     {DAYS_OF_WEEK.map((day) => (
-                      <div
-                        key={day.value}
-                        className="flex items-center space-x-2"
-                      >
+                      <div key={day.value} className="flex items-center space-x-2">
                         <Checkbox
                           id={`day-${day.value}`}
                           checked={recurringDays.includes(day.value)}
@@ -343,11 +325,7 @@ export default function MentorAvailability() {
         </Dialog>
       </div>
 
-      <Tabs
-        defaultValue="upcoming"
-        value={activeTab}
-        onValueChange={setActiveTab}
-      >
+      <Tabs defaultValue="upcoming" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-4">
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="all">All Slots</TabsTrigger>
@@ -357,27 +335,18 @@ export default function MentorAvailability() {
           {Object.keys(groupedSlots).length === 0 ? (
             <Card>
               <CardContent className="pt-6 text-center">
-                <p className="text-muted-foreground">
-                  No upcoming availability slots. Add some to get started!
-                </p>
+                <p className="text-muted-foreground">No upcoming availability slots. Add some to get started!</p>
               </CardContent>
             </Card>
           ) : (
             Object.entries(groupedSlots)
-              .sort(
-                ([dateA], [dateB]) =>
-                  new Date(dateA).getTime() - new Date(dateB).getTime()
-              )
+              .sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              .map(([date, slots]: any) => (
+              .map(([date, slots]:any) => (
                 <Card key={date}>
                   <CardHeader>
-                    <CardTitle>
-                      {format(new Date(date), "EEEE, MMMM d, yyyy")}
-                    </CardTitle>
-                    <CardDescription>
-                      {slots.length} time slot(s)
-                    </CardDescription>
+                    <CardTitle>{format(new Date(date), "EEEE, MMMM d, yyyy")}</CardTitle>
+                    <CardDescription>{slots.length} time slot(s)</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
@@ -403,9 +372,7 @@ export default function MentorAvailability() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() =>
-                                handleDeleteSlot(slot.id, slot.isRecurring)
-                              }
+                              onClick={() => handleDeleteSlot(slot.id, slot.isRecurring)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -423,26 +390,17 @@ export default function MentorAvailability() {
           {Object.keys(groupedSlots).length === 0 ? (
             <Card>
               <CardContent className="pt-6 text-center">
-                <p className="text-muted-foreground">
-                  No availability slots found.
-                </p>
+                <p className="text-muted-foreground">No availability slots found.</p>
               </CardContent>
             </Card>
           ) : (
             Object.entries(groupedSlots)
-              .sort(
-                ([dateA], [dateB]) =>
-                  new Date(dateA).getTime() - new Date(dateB).getTime()
-              )
-              .map(([date, slots]: any) => (
+              .sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
+              .map(([date, slots]:any) => (
                 <Card key={date}>
                   <CardHeader>
-                    <CardTitle>
-                      {format(new Date(date), "EEEE, MMMM d, yyyy")}
-                    </CardTitle>
-                    <CardDescription>
-                      {slots.length} time slot(s)
-                    </CardDescription>
+                    <CardTitle>{format(new Date(date), "EEEE, MMMM d, yyyy")}</CardTitle>
+                    <CardDescription>{slots.length} time slot(s)</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
@@ -468,9 +426,7 @@ export default function MentorAvailability() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() =>
-                                handleDeleteSlot(slot.id, slot.isRecurring)
-                              }
+                              onClick={() => handleDeleteSlot(slot.id, slot.isRecurring)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -485,5 +441,6 @@ export default function MentorAvailability() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }
+

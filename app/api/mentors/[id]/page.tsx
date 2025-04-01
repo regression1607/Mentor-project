@@ -3,7 +3,7 @@ import { Star, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SessionBooking from "@/components/booking/session-booking";
+// import { SessionBooking } from "@/components/booking/session-booking"
 import { StartChatButton } from "@/components/chat/start-chat-button";
 import { getMentorById } from "@/lib/mentors";
 import { notFound } from "next/navigation";
@@ -15,7 +15,6 @@ export default async function MentorProfile({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  console.log("id from params", id);
   const mentor = await getMentorById(id);
   if (!mentor) {
     notFound();
@@ -193,8 +192,8 @@ export default async function MentorProfile({
               <CardTitle>Book a Session</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <SessionBooking mentor={mentor} />
-              {/* <WoSessionBooking mentor={mentor} /> */}
+              {/* <SessionBooking mentor={mentor} /> */}
+              {/* <WoSessionBooking mentor={mentor} />  */}
               <div>
                 <h3 className="font-medium mb-3 flex items-center">
                   <Calendar className="h-5 w-5 mr-2" /> Availability

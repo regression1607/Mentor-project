@@ -1,40 +1,27 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Star } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { getMentors } from "@/lib/mentors";
+import Link from "next/link"
+import Image from "next/image"
+import { Star } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { getMentors } from "@/lib/mentors"
 
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
 export default async function MentorsList({ searchParams }: PageProps) {
-  const page =
-    typeof searchParams.page === "string"
-      ? Number.parseInt(searchParams.page)
-      : 1;
+  const page = typeof searchParams.page === "string" ? Number.parseInt(searchParams.page) : 1
   const specialties =
     typeof searchParams.specialties === "string"
       ? [searchParams.specialties]
       : Array.isArray(searchParams.specialties)
-      ? searchParams.specialties
-      : undefined;
-  const minPrice =
-    typeof searchParams.minPrice === "string"
-      ? Number.parseInt(searchParams.minPrice)
-      : undefined;
-  const maxPrice =
-    typeof searchParams.maxPrice === "string"
-      ? Number.parseInt(searchParams.maxPrice)
-      : undefined;
-  const minRating =
-    typeof searchParams.minRating === "string"
-      ? Number.parseFloat(searchParams.minRating)
-      : undefined;
-  const search =
-    typeof searchParams.search === "string" ? searchParams.search : undefined;
+        ? searchParams.specialties
+        : undefined
+  const minPrice = typeof searchParams.minPrice === "string" ? Number.parseInt(searchParams.minPrice) : undefined
+  const maxPrice = typeof searchParams.maxPrice === "string" ? Number.parseInt(searchParams.maxPrice) : undefined
+  const minRating = typeof searchParams.minRating === "string" ? Number.parseFloat(searchParams.minRating) : undefined
+  const search = typeof searchParams.search === "string" ? searchParams.search : undefined
 
   const { mentors, totalPages } = await getMentors({
     page,
@@ -43,20 +30,18 @@ export default async function MentorsList({ searchParams }: PageProps) {
     maxPrice,
     minRating,
     search,
-  });
+  })
 
   if (mentors.length === 0) {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-semibold mb-4">No mentors found</h2>
-        <p className="text-gray-600 mb-6">
-          Try adjusting your filters or search criteria
-        </p>
+        <p className="text-gray-600 mb-6">Try adjusting your filters or search criteria</p>
         <Link href="/mentors">
           <Button>Clear Filters</Button>
         </Link>
       </div>
-    );
+    )
   }
 
   return (
@@ -65,14 +50,14 @@ export default async function MentorsList({ searchParams }: PageProps) {
         <p className="text-gray-600">Showing {mentors.length} mentors</p>
         <div className="flex gap-2">
           {page > 1 && (
-            <Link href={`/mentors?page=${page - 1}`}>
+            <Link href={`/api/mentors?page=${page - 1}`}>
               <Button variant="outline" size="sm">
                 Previous
               </Button>
             </Link>
           )}
           {page < totalPages && (
-            <Link href={`/mentors?page=${page + 1}`}>
+            <Link href={`/api/mentors?page=${page + 1}`}>
               <Button variant="outline" size="sm">
                 Next
               </Button>
@@ -99,12 +84,8 @@ export default async function MentorsList({ searchParams }: PageProps) {
 
               <div className="flex items-center mb-3">
                 <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                <span className="ml-1 font-medium">
-                  {mentor.rating.toFixed(1)}
-                </span>
-                <span className="text-gray-500 ml-1">
-                  ({mentor.reviewCount} reviews)
-                </span>
+                <span className="ml-1 font-medium">{mentor.rating.toFixed(1)}</span>
+                <span className="text-gray-500 ml-1">({mentor.reviewCount} reviews)</span>
               </div>
 
               <div className="mb-4">
@@ -136,7 +117,7 @@ export default async function MentorsList({ searchParams }: PageProps) {
                 </div>
               </div>
 
-              <Link href={`/mentors/${mentor.id}`}>
+              <Link href={`/api/mentors/${mentor.id}`}>
                 <Button className="w-full">View Profile</Button>
               </Link>
             </div>
@@ -146,17 +127,13 @@ export default async function MentorsList({ searchParams }: PageProps) {
 
       <div className="flex justify-center gap-2 mt-8">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <Link key={pageNum} href={`/mentors?page=${pageNum}`}>
-            <Button
-              variant={pageNum === page ? "default" : "outline"}
-              size="sm"
-              className="w-10 h-10"
-            >
+          <Link key={pageNum} href={`/api/mentors?page=${pageNum}`}>
+            <Button variant={pageNum === page ? "default" : "outline"} size="sm" className="w-10 h-10">
               {pageNum}
             </Button>
           </Link>
         ))}
       </div>
     </div>
-  );
+  )
 }
