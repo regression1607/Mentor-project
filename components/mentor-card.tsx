@@ -1,31 +1,36 @@
-import Link from "next/link"
-import Image from "next/image"
-import { Star } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import Image from "next/image";
+import { Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 type Mentor = {
-  id: string
-  name: string
-  title: string
-  image?: string
-  rating: number
-  reviewCount: number
-  specialties: string[]
+  id: string;
+  name: string;
+  title: string;
+  image?: string;
+  rating: number;
+  reviewCount: number;
+  specialties: string[];
   pricing: {
-    chat: number
-    video: number
-    call: number
-  }
-}
+    chat: number;
+    video: number;
+    call: number;
+  };
+};
 
 export function MentorCard({ mentor }: { mentor: Mentor }) {
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
       <CardContent className="p-0">
         <div className="relative h-48 w-full">
-          <Image src={mentor.image || "/placeholder.svg"} alt={mentor.name} fill className="object-cover" />
+          <Image
+            src={mentor.image || "/placeholder.svg"}
+            alt={mentor.name}
+            fill
+            className="object-cover"
+          />
         </div>
         <div className="p-6">
           <h3 className="text-xl font-semibold mb-1">{mentor.name}</h3>
@@ -34,7 +39,9 @@ export function MentorCard({ mentor }: { mentor: Mentor }) {
           <div className="flex items-center mb-4">
             <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
             <span className="ml-1 font-medium">{mentor.rating}</span>
-            <span className="text-gray-500 ml-1">({mentor.reviewCount} reviews)</span>
+            <span className="text-gray-500 ml-1">
+              ({mentor.reviewCount} reviews)
+            </span>
           </div>
 
           <div className="mb-4">
@@ -64,11 +71,10 @@ export function MentorCard({ mentor }: { mentor: Mentor }) {
         </div>
       </CardContent>
       <CardFooter className="p-6 pt-0">
-        <Link href={`/api/mentors/${mentor.id}`} className="w-full">
+        <Link href={`/mentors/${mentor.id}`} className="w-full">
           <Button className="w-full">View Profile</Button>
         </Link>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
