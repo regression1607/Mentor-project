@@ -12,7 +12,7 @@ import {
   Clock,
 } from "lucide-react";
 
-// import Mentor from "@/models/Mentor";
+import Mentor from "@/models/Mentor";
 import { getMentorById } from "@/lib/mentors";
 
 export default async function MentorDashboard() {
@@ -219,9 +219,7 @@ export default async function MentorDashboard() {
                           View Details
                         </Button>
                         <Button variant="outline" size="sm" asChild>
-                          <a href="/dashboard/mentor/availability">
-                            Manage Availability
-                          </a>
+                          <a href="/dashboard/mentor/availability">Manage Availability</a>
                         </Button>
                       </div>
                     </div>

@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import MentorsList from "@/components/mentors-list";
-import { MentorFilters } from "@/components/mentor-filters";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react"
+import  MentorsList  from "@/components/mentors-list"
+import { MentorFilters } from "@/components/mentor-filters"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default async function MentorsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams:Promise< { [key: string]: string | string[] | undefined }>
 }) {
   const params = await searchParams;
   return (
@@ -25,17 +25,14 @@ export default async function MentorsPage({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function MentorsListSkeleton() {
   return (
     <div className="space-y-8">
       {[...Array(6)].map((_, i) => (
-        <div
-          key={i}
-          className="flex flex-col md:flex-row gap-4 p-6 border rounded-lg"
-        >
+        <div key={i} className="flex flex-col md:flex-row gap-4 p-6 border rounded-lg">
           <Skeleton className="h-24 w-24 rounded-full" />
           <div className="space-y-2 flex-1">
             <Skeleton className="h-6 w-48" />
@@ -53,5 +50,5 @@ function MentorsListSkeleton() {
         </div>
       ))}
     </div>
-  );
+  )
 }
