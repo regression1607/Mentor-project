@@ -7,7 +7,6 @@ import SessionBooking from "@/components/booking/session-booking";
 import { StartChatButton } from "@/components/chat/start-chat-button";
 import { getMentorById } from "@/lib/mentors";
 import { notFound } from "next/navigation";
-// import { WoSessionBooking } from "@/components/booking/wo-state-session-booking"
 
 export default async function MentorProfile({
   params,
@@ -20,6 +19,7 @@ export default async function MentorProfile({
   if (!mentor) {
     notFound();
   }
+  const mentorData = JSON.parse(JSON.stringify(mentor));
 
   // Mock reviews data - in a real app, this would come from a database
   const reviews = [
@@ -193,8 +193,7 @@ export default async function MentorProfile({
               <CardTitle>Book a Session</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <SessionBooking mentor={mentor} />
-              {/* <WoSessionBooking mentor={mentor} /> */}
+              <SessionBooking mentor={mentorData} />
               <div>
                 <h3 className="font-medium mb-3 flex items-center">
                   <Calendar className="h-5 w-5 mr-2" /> Availability

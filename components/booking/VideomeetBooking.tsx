@@ -1,5 +1,5 @@
 "use client";
-import { createJitsiLink } from "@/actions/meeting-sctions";
+import { createJitsiLink } from "@/actions/meeting-actions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

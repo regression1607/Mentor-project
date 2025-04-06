@@ -121,26 +121,11 @@ export async function getMentorById(id: string): Promise<MentorProfile | null> {
   }
 
   const user = await User.findById(mentor.userId);
-  console.log("mentor in lib", user);
 
   if (!user) {
     return null;
   }
-  console.log({
-    id: mentor._id.toString(),
-    userId: mentor.userId.toString(),
-    name: user.name,
-    title: mentor.title,
-    image: user.image,
-    about: mentor.about,
-    specialties: mentor.specialties,
-    experience: mentor.experience,
-    education: mentor.education,
-    pricing: mentor.pricing,
-    availability: mentor.availability,
-    rating: mentor.rating,
-    reviewCount: mentor.reviewCount,
-  });
+
   return {
     id: mentor._id.toString(),
     userId: mentor.userId.toString(),
